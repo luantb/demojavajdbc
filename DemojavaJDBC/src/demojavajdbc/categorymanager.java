@@ -5,7 +5,11 @@
  */
 package demojavajdbc;
 
+import com.sun.jndi.cosnaming.CNNameParser;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
@@ -19,9 +23,17 @@ public class categorymanager {
         this.conn= bk.cnn;
     }
     
-    public  ArrayList<categoryEntity> loadcat(){
+    public  ArrayList<categoryEntity> loadcat() throws SQLException{
         ArrayList<categoryEntity> lstcat = new ArrayList<>();
         
+        Statement stt = conn.createStatement();
+        ResultSet rs = stt.executeQuery("{CALL getallCategory}");
+        
+        while (rs.next()) {
+            categoryEntity cat  = new categoryEntity(rs.getInt("id"), rs.getString("catname"));
+            lstcat.add(cat);
+            
+        }
         
         
         return  lstcat;
