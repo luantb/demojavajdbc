@@ -8,7 +8,10 @@ package demojavajdbc;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import static java.util.Collections.list;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -19,24 +22,33 @@ public class MainFrame extends javax.swing.JFrame {
     /**
      * Creates new form MainFrame
      */
-    public MainFrame() {
+    public MainFrame() throws SQLException {
         initComponents();
+        loadCat();
+        dftbmdel.addColumn("Id");
+        dftbmdel.addColumn("catid");
+        dftbmdel.addColumn("Ten  ");
+        dftbmdel.addColumn("gia ");
+        dftbmdel.addColumn("so luong");
+
     }
     DefaultComboBoxModel<categoryEntity> dfcbmd;
-    
-    
-            
+    DefaultTableModel dftbmdel;
+
     private  void loadCat() throws SQLException{
         categorymanager manager = new categorymanager();
         ArrayList<categoryEntity> list = manager.loadcat();
         categoryEntity arr[] = new categoryEntity[list.size()];
         for (int i = 0; i < list.size(); i++) {
             categoryEntity get = list.get(i);
-           
+            arr[i]= get;
+//            System.out.println(get);
         }
+        dfcbmd = new DefaultComboBoxModel<>(arr);
+        jcbcategory.setModel(dfcbmd);
     }
-    
-     
+
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -45,9 +57,9 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         lblcategory = new javax.swing.JLabel();
-        jcbcategory = new javax.swing.JComboBox<>();
+        jcbcategory = new javax.swing.JComboBox();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTbldanhsach = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -58,9 +70,14 @@ public class MainFrame extends javax.swing.JFrame {
 
         lblcategory.setText("Danh muc san pham");
 
-        jcbcategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jcbcategory.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jcbcategory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbcategoryActionPerformed(evt);
+            }
+        });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTbldanhsach.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -71,7 +88,7 @@ public class MainFrame extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(jTbldanhsach);
 
         jButton1.setText("jButton1");
 
@@ -118,6 +135,29 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jcbcategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbcategoryActionPerformed
+        int catid = (int) jcbcategory.getSelectedItem();
+
+        try {
+            categoryEntity cat =  (categoryEntity) jcbcategory.getSelectedItem();
+            Productmanager promanager = new Productmanager();
+            ArrayList<productEntity> listpro = promanager.loadpro();
+            productEntity arrpro[] = new productEntity[listpro.size()];
+            for (int i = 0; i < listpro.size(); i++) {
+                productEntity get = listpro.get(i);
+                if ( catid == get.catID ) {
+                    arrpro[i] = get;
+                }
+
+            }
+            dftbmdel = new DefaultTableModel();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_jcbcategoryActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -125,7 +165,7 @@ public class MainFrame extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -148,7 +188,11 @@ public class MainFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainFrame().setVisible(true);
+                try {
+                    new MainFrame().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -159,8 +203,8 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JComboBox<String> jcbcategory;
+    private javax.swing.JTable jTbldanhsach;
+    private javax.swing.JComboBox jcbcategory;
     private javax.swing.JLabel lblcategory;
     // End of variables declaration//GEN-END:variables
 }

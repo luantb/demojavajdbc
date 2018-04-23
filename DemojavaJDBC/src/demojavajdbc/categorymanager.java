@@ -30,12 +30,9 @@ public class categorymanager {
         ResultSet rs = stt.executeQuery("{CALL getallCategory}");
         
         while (rs.next()) {
-            categoryEntity cat  = new categoryEntity(rs.getInt("id"), rs.getString("catname"));
+            categoryEntity cat  = new categoryEntity(rs.getInt("catid"), rs.getString("catname"));
             lstcat.add(cat);
-            
         }
-        
-        
         return  lstcat;
     }
 }

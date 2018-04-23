@@ -23,7 +23,7 @@ public class categoryEntity {
 
     @Override
     public String toString() {
-        return "categoryEntity{" + "catname=" + catname + '}';
+        return catname;
     }
     
     

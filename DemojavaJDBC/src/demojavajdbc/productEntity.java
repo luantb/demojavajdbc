@@ -43,5 +43,12 @@ public class productEntity {
         this.price = price;
         this.quality = quality;
     }
-    
+    public String[] toArray() {
+        return new String[]{
+            String.valueOf(this.id),
+            String.valueOf(this.catID),
+            this.proname,
+            String.valueOf(this.price),
+            String.valueOf(this.quality)};
+    }
 }
